@@ -1,10 +1,10 @@
 <?php
 
-namespace Alariva\Cashflow\Tests;
+namespace Alariva\LaravelCashflow\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Alariva\Cashflow\CashflowServiceProvider;
+use Alariva\LaravelCashflow\LaravelCashflowServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -13,14 +13,14 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Alariva\\Cashflow\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'Alariva\\LaravelCashflow\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 
     protected function getPackageProviders($app)
     {
         return [
-            CashflowServiceProvider::class,
+            LaravelCashflowServiceProvider::class,
         ];
     }
 

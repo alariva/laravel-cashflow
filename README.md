@@ -52,7 +52,7 @@ php artisan vendor:publish --tag="laravel-cashflow-views"
 ## Usage
 
 ```php
-$cashflow = new Alariva\Cashflow();
+$cashflow = new Alariva\LaravelCashflow\Cashflow();
 echo $cashflow->echoPhrase('Hello, Alariva!');
 ```
 

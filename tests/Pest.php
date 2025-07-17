@@ -1,5 +1,5 @@
 <?php
 
-use Alariva\Cashflow\Tests\TestCase;
+use Alariva\LaravelCashflow\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

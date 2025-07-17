@@ -1,12 +1,12 @@
 <?php
 
-namespace Alariva\Cashflow;
+namespace Alariva\LaravelCashflow;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Alariva\Cashflow\Commands\CashflowCommand;
+use Alariva\LaravelCashflow\Commands\CashflowCommand;
 
-class CashflowServiceProvider extends PackageServiceProvider
+class LaravelCashflowServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {

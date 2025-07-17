@@ -1,6 +1,6 @@
 <?php
 
-namespace Alariva\Cashflow\Commands;
+namespace Alariva\LaravelCashflow\Commands;
 
 use Illuminate\Console\Command;
 

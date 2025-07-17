@@ -1,6 +1,6 @@
 <?php
 
-namespace Alariva\Cashflow\Database\Factories;
+namespace Alariva\LaravelCashflow\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 

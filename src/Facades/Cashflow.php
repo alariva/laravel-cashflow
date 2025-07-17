@@ -1,16 +1,16 @@
 <?php
 
-namespace Alariva\Cashflow\Facades;
+namespace Alariva\LaravelCashflow\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Alariva\Cashflow\Cashflow
+ * @see \Alariva\LaravelCashflow\Cashflow
  */
 class Cashflow extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \Alariva\Cashflow\Cashflow::class;
+        return \Alariva\LaravelCashflow\Cashflow::class;
     }
 }

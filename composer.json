@@ -35,13 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Alariva\\Cashflow\\": "src/",
-            "Alariva\\Cashflow\\Database\\Factories\\": "database/factories/"
+            "Alariva\\LaravelCashflow\\": "src/",
+            "Alariva\\LaravelCashflow\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Alariva\\Cashflow\\Tests\\": "tests/",
+            "Alariva\\LaravelCashflow\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -63,10 +63,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Alariva\\Cashflow\\CashflowServiceProvider"
+                "Alariva\\LaravelCashflow\\LaravelCashflowServiceProvider"
             ],
             "aliases": {
-                "Cashflow": "Alariva\\Cashflow\\Facades\\Cashflow"
+                "Cashflow": "Alariva\\LaravelCashflow\\Facades\\Cashflow"
             }
         }
     },

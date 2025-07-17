@@ -1,5 +1,5 @@
 <?php
 
-namespace Alariva\Cashflow;
+namespace Alariva\LaravelCashflow;
 
 class Cashflow {}

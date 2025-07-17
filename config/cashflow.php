@@ -1,6 +1,6 @@
 <?php
 
-// config for Alariva/Cashflow
+// config for Alariva/LaravelCashflow
 return [
 
 ];
