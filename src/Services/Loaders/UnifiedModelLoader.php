@@ -15,40 +15,33 @@ use Alariva\LaravelCashflow\Services\Frequency\{
     YearlyRule
 };
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class UnifiedModelLoader
 {
+    protected int $userId;
+
+    public function __construct(?Authenticatable $user = null)
+    {
+        $this->userId = $user?->getAuthIdentifier() ?? auth()->id();
+    }
+
+    public function forUser(Authenticatable|int $user): static
+    {
+        $this->userId = is_int($user) ? $user : $user->getAuthIdentifier();
+        return $this;
+    }
+
     /**
      * @return Concept[]
      */
     public function loadConcepts(): array
     {
-        return CashflowRecord::where('type', 'concept')->get()->map(function ($record) {
-            $details = $record->details;
-
-            $rule = match (strtolower($details['frequency'] ?? '')) {
-                'daily' => new DailyRule(),
-                'weekly' => new WeeklyRule(),
-                'monthly' => new MonthlyRule(),
-                'bimonthly' => new BimonthlyRule(),
-                'quarterly' => new QuarterlyRule(),
-                'semiannual' => new SemiannualRule(),
-                'yearly' => new YearlyRule(),
-                default => throw new \InvalidArgumentException("Invalid frequency: {$details['frequency']}"),
-            };
-
-            return new Concept(
-                flow: $record->flow,
-                name: $record->name,
-                baseAmount: (float) $details['base_amount'],
-                frequency: $rule,
-                quantity: (int) ($details['quantity'] ?? 1),
-                category: $details['category'] ?? null,
-                startDate: isset($details['start_date']) ? Carbon::parse($details['start_date']) : now(),
-                currency: $record->currency
-            );
-        })->all();
+        return CashflowRecord::forUser($this->userId)
+            ->where('type', 'concept')
+            ->get()
+            ->map(fn ($record) => $this->mapToConcept($record))
+            ->all();
     }
 
     /**
@@ -56,17 +49,11 @@ class UnifiedModelLoader
      */
     public function loadFixedEntries(): array
     {
-        return CashflowRecord::where('type', 'fixed')->get()->map(function ($record) {
-            $details = $record->details;
-
-            return new CashflowEntry(
-                flow: $record->flow,
-                conceptName: $record->name,
-                date: Carbon::parse($details['date']),
-                amount: (float) $details['amount'],
-                currency: $record->currency
-            );
-        })->all();
+        return CashflowRecord::forUser($this->userId)
+            ->where('type', 'fixed')
+            ->get()
+            ->map(fn ($record) => $this->mapToFixedEntry($record))
+            ->all();
     }
 
     /**
@@ -77,30 +64,80 @@ class UnifiedModelLoader
     {
         $entries = [];
 
-        $records = CashflowRecord::where('type', 'installment')->get();
+        $records = CashflowRecord::forUser($this->userId)
+            ->where('type', 'installment')
+            ->get();
 
         foreach ($records as $record) {
-            $details = $record->details;
+            $entries = array_merge($entries, $this->mapToInstallments($record, $fromDate));
+        }
 
-            $amount = (float) $details['amount'];
-            $installments = (int) $details['installments'];
-            $startDate = Carbon::parse($details['start_date']);
+        return $entries;
+    }
 
-            for ($i = 0; $i < $installments; $i++) {
-                $installmentDate = $startDate->copy()->addMonths($i);
+    protected function mapToConcept(CashflowRecord $record): Concept
+    {
+        $details = $record->details;
 
-                if ($installmentDate->lt($fromDate)) {
-                    continue;
-                }
+        $rule = match (strtolower($details['frequency'] ?? '')) {
+            'daily' => new DailyRule(),
+            'weekly' => new WeeklyRule(),
+            'monthly' => new MonthlyRule(),
+            'bimonthly' => new BimonthlyRule(),
+            'quarterly' => new QuarterlyRule(),
+            'semiannual' => new SemiannualRule(),
+            'yearly' => new YearlyRule(),
+            default => throw new \InvalidArgumentException("Invalid frequency: {$details['frequency']}"),
+        };
 
-                $entries[] = new CashflowEntry(
-                    flow: $record->flow,
-                    conceptName: $details['card'] ?? $record->name,
-                    date: $installmentDate,
-                    amount: $amount,
-                    currency: $record->currency
-                );
+        return new Concept(
+            flow: $record->flow,
+            name: $record->name,
+            baseAmount: (float) $details['base_amount'],
+            frequency: $rule,
+            quantity: (int) ($details['quantity'] ?? 1),
+            category: $details['category'] ?? null,
+            startDate: isset($details['start_date']) ? Carbon::parse($details['start_date']) : now(),
+            currency: $record->currency
+        );
+    }
+
+    protected function mapToFixedEntry(CashflowRecord $record): CashflowEntry
+    {
+        $details = $record->details;
+
+        return new CashflowEntry(
+            flow: $record->flow,
+            conceptName: $record->name,
+            date: Carbon::parse($details['date']),
+            amount: (float) $details['amount'],
+            currency: $record->currency
+        );
+    }
+
+    protected function mapToInstallments(CashflowRecord $record, Carbon $fromDate): array
+    {
+        $details = $record->details;
+        $amount = (float) $details['amount'];
+        $installments = (int) $details['installments'];
+        $startDate = Carbon::parse($details['start_date']);
+
+        $entries = [];
+
+        for ($i = 0; $i < $installments; $i++) {
+            $installmentDate = $startDate->copy()->addMonths($i);
+
+            if ($installmentDate->lt($fromDate)) {
+                continue;
             }
+
+            $entries[] = new CashflowEntry(
+                flow: $record->flow,
+                conceptName: $details['card'] ?? $record->name,
+                date: $installmentDate,
+                amount: $amount,
+                currency: $record->currency
+            );
         }
 
         return $entries;
