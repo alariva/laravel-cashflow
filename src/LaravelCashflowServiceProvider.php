@@ -22,4 +22,13 @@ class LaravelCashflowServiceProvider extends PackageServiceProvider
             ->hasMigration('create_laravel_cashflow_table')
             ->hasCommand(CashflowCommand::class);
     }
+
+    public function boot(): void
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+        $this->publishes([
+            __DIR__.'/../database/migrations' => database_path('migrations'),
+        ], 'cashflow-migrations');
+    }
 }
