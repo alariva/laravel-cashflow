@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class CashflowAggregator
 {
     /**
-     * @param CashflowEntry[] $entries
+     * @param  CashflowEntry[]  $entries
      */
     public function summarize(array $entries): array
     {
@@ -18,7 +18,7 @@ class CashflowAggregator
             $month = $entry->date->format('M Y');
             $currency = $entry->currency;
 
-            if (!isset($totalsByMonth[$month][$currency])) {
+            if (! isset($totalsByMonth[$month][$currency])) {
                 $totalsByMonth[$month][$currency] = ['in' => 0, 'out' => 0];
             }
 
@@ -49,8 +49,8 @@ class CashflowAggregator
         }
 
         return [
-            'by_month'    => $totalsByMonth,
-            'balance'     => $balance,
+            'by_month' => $totalsByMonth,
+            'balance' => $balance,
             'accumulated' => $accumulated,
         ];
     }

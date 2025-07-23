@@ -18,12 +18,12 @@ class CsvConceptLoader
     {
         $concepts = [];
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             throw new \RuntimeException("File not found: $path");
         }
 
         $handle = fopen($path, 'r');
-        if (!$handle) {
+        if (! $handle) {
             throw new \RuntimeException("Could not open file: $path");
         }
 
@@ -33,14 +33,14 @@ class CsvConceptLoader
             [$flow, $name, $amount, $currency, $frequency, $quantity, $category, $startDate] = array_map('trim', $data);
 
             $rule = match (strtolower($frequency)) {
-                'yearly'      => new YearlyRule(),
-                'semiannual'  => new SemiannualRule(),
-                'quarterly'   => new QuarterlyRule(),
-                'bimonthly'   => new BimonthlyRule(),
-                'monthly'     => new MonthlyRule(),
-                'weekly'      => new WeeklyRule(),
-                'daily'       => new DailyRule(),
-                default       => throw new InvalidArgumentException("Invalid frequency: $frequency"),
+                'yearly' => new YearlyRule,
+                'semiannual' => new SemiannualRule,
+                'quarterly' => new QuarterlyRule,
+                'bimonthly' => new BimonthlyRule,
+                'monthly' => new MonthlyRule,
+                'weekly' => new WeeklyRule,
+                'daily' => new DailyRule,
+                default => throw new InvalidArgumentException("Invalid frequency: $frequency"),
             };
 
             $concepts[] = new Concept(

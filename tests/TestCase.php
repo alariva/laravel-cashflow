@@ -2,9 +2,9 @@
 
 namespace Alariva\LaravelCashflow\Tests;
 
+use Alariva\LaravelCashflow\LaravelCashflowServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Alariva\LaravelCashflow\LaravelCashflowServiceProvider;
 
 class TestCase extends Orchestra
 {

@@ -4,8 +4,8 @@ namespace Alariva\LaravelCashflow\Services\Loaders;
 
 use Alariva\LaravelCashflow\Services\CashflowEntry;
 use Carbon\Carbon;
-use RuntimeException;
 use InvalidArgumentException;
+use RuntimeException;
 
 class CsvInstallmentLoader
 {
@@ -16,12 +16,12 @@ class CsvInstallmentLoader
     {
         $entries = [];
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             throw new RuntimeException("File not found: $path");
         }
 
         $handle = fopen($path, 'r');
-        if (!$handle) {
+        if (! $handle) {
             throw new RuntimeException("Could not open file: $path");
         }
 
@@ -30,7 +30,7 @@ class CsvInstallmentLoader
         while (($data = fgetcsv($handle, 1000, ';')) !== false) {
             [$flow, $name, $startDate, $installments, $monthlyAmount, $currency, $card] = array_map('trim', $data);
 
-            if (!in_array($flow, ['in', 'out'])) {
+            if (! in_array($flow, ['in', 'out'])) {
                 throw new InvalidArgumentException("Invalid flow: $flow");
             }
 

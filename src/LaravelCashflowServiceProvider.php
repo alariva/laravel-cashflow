@@ -2,9 +2,9 @@
 
 namespace Alariva\LaravelCashflow;
 
+use Alariva\LaravelCashflow\Commands\CashflowCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Alariva\LaravelCashflow\Commands\CashflowCommand;
 
 class LaravelCashflowServiceProvider extends PackageServiceProvider
 {
@@ -25,7 +25,7 @@ class LaravelCashflowServiceProvider extends PackageServiceProvider
 
     public function boot(): void
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         $this->publishes([
             __DIR__.'/../database/migrations' => database_path('migrations'),

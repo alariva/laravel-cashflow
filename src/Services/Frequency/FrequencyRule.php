@@ -2,8 +2,6 @@
 
 namespace Alariva\LaravelCashflow\Services\Frequency;
 
-use Carbon\CarbonPeriod;
-
 interface FrequencyRule
 {
     /**

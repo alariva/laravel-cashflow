@@ -13,8 +13,11 @@ use Carbon\Carbon;
 class CashflowGenerator
 {
     protected InflationAdjuster $inflation;
+
     protected array $concepts = [];
+
     protected array $installmentEntries = [];
+
     protected array $fixedEntries = [];
 
     protected array $inflationPerCurrency = [];
@@ -24,11 +27,10 @@ class CashflowGenerator
         // fallback to ARS if not provided
         $this->inflationPerCurrency = $inflationPerCurrency + [
             'ARS' => new CompoundMonthlyInflation(0.0252),
-            'USD' => new NoInflationAdjuster(),
+            'USD' => new NoInflationAdjuster,
             'EUR' => new CompoundMonthlyInflation(0.005),
         ];
     }
-
 
     public function setConcepts(array $concepts): void
     {
@@ -55,14 +57,14 @@ class CashflowGenerator
         $allEntries = array_merge($conceptEntries, $this->fixedEntries, $this->installmentEntries);
 
         // Aggregate monthly totals and balances
-        $aggregator = new CashflowAggregator();
+        $aggregator = new CashflowAggregator;
         $summary = $aggregator->summarize($allEntries);
 
         // Prepare frontend-friendly breakdown
-        $breakdown = (new CashflowBreakdownBuilder())->build($allEntries);
+        $breakdown = (new CashflowBreakdownBuilder)->build($allEntries);
 
         return array_merge($breakdown, [
-            'totals' => $summary
+            'totals' => $summary,
         ]);
     }
 }

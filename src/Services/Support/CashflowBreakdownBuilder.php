@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class CashflowBreakdownBuilder
 {
     /**
-     * @param CashflowEntry[] $entries
+     * @param  CashflowEntry[]  $entries
      */
     public function build(array $entries): array
     {
@@ -22,12 +22,12 @@ class CashflowBreakdownBuilder
 
             $key = "{$entry->flow}|{$entry->conceptName}|{$currency}";
 
-            if (!isset($conceptsMap[$key])) {
+            if (! isset($conceptsMap[$key])) {
                 $conceptsMap[$key] = [
-                    'name'     => $entry->conceptName,
-                    'flow'     => $entry->flow,
+                    'name' => $entry->conceptName,
+                    'flow' => $entry->flow,
                     'currency' => $currency,
-                    'amounts'  => [],
+                    'amounts' => [],
                 ];
             }
 
@@ -42,12 +42,12 @@ class CashflowBreakdownBuilder
         }
 
         $months = array_keys($monthSet);
-        usort($months, fn($a, $b) => Carbon::createFromFormat('M Y', $a)->timestamp <=> Carbon::createFromFormat('M Y', $b)->timestamp);
+        usort($months, fn ($a, $b) => Carbon::createFromFormat('M Y', $a)->timestamp <=> Carbon::createFromFormat('M Y', $b)->timestamp);
 
         // Fill missing months with zero
         foreach ($conceptsMap as &$concept) {
             foreach ($months as $month) {
-                if (!isset($concept['amounts'][$month])) {
+                if (! isset($concept['amounts'][$month])) {
                     $concept['amounts'][$month] = 0;
                 }
             }
@@ -56,7 +56,7 @@ class CashflowBreakdownBuilder
 
         return [
             'concepts' => array_values($conceptsMap),
-            'months'   => $months,
+            'months' => $months,
         ];
     }
 }

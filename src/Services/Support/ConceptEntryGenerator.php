@@ -2,10 +2,10 @@
 
 namespace Alariva\LaravelCashflow\Services\Support;
 
-use Alariva\LaravelCashflow\Services\Inflation\InflationAdjuster;
-use Alariva\LaravelCashflow\Services\Inflation\NoInflationAdjuster;
 use Alariva\LaravelCashflow\Services\CashflowEntry;
 use Alariva\LaravelCashflow\Services\Concept;
+use Alariva\LaravelCashflow\Services\Inflation\InflationAdjuster;
+use Alariva\LaravelCashflow\Services\Inflation\NoInflationAdjuster;
 use Carbon\Carbon;
 
 class ConceptEntryGenerator
@@ -21,7 +21,7 @@ class ConceptEntryGenerator
     }
 
     /**
-     * @param Concept[] $concepts
+     * @param  Concept[]  $concepts
      * @return CashflowEntry[]
      */
     public function generate(array $concepts, Carbon $start, Carbon $end): array
@@ -31,7 +31,7 @@ class ConceptEntryGenerator
         foreach ($concepts as $concept) {
             $currency = $concept->currency ?? 'ARS';
 
-            $inflation = $this->inflationPerCurrency[$currency] ?? new NoInflationAdjuster();
+            $inflation = $this->inflationPerCurrency[$currency] ?? new NoInflationAdjuster;
 
             $effectiveStart = $concept->startDate ?? $start;
             $fromDate = $effectiveStart->greaterThan($start) ? $effectiveStart : $start;

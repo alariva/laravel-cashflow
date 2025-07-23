@@ -5,15 +5,13 @@ namespace Alariva\LaravelCashflow\Services\Loaders;
 use Alariva\LaravelCashflow\Models\CashflowRecord;
 use Alariva\LaravelCashflow\Services\CashflowEntry;
 use Alariva\LaravelCashflow\Services\Concept;
-use Alariva\LaravelCashflow\Services\Frequency\{
-    BimonthlyRule,
-    DailyRule,
-    MonthlyRule,
-    QuarterlyRule,
-    SemiannualRule,
-    WeeklyRule,
-    YearlyRule
-};
+use Alariva\LaravelCashflow\Services\Frequency\BimonthlyRule;
+use Alariva\LaravelCashflow\Services\Frequency\DailyRule;
+use Alariva\LaravelCashflow\Services\Frequency\MonthlyRule;
+use Alariva\LaravelCashflow\Services\Frequency\QuarterlyRule;
+use Alariva\LaravelCashflow\Services\Frequency\SemiannualRule;
+use Alariva\LaravelCashflow\Services\Frequency\WeeklyRule;
+use Alariva\LaravelCashflow\Services\Frequency\YearlyRule;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -29,6 +27,7 @@ class UnifiedModelLoader
     public function forUser(Authenticatable|int $user): static
     {
         $this->userId = is_int($user) ? $user : $user->getAuthIdentifier();
+
         return $this;
     }
 
@@ -57,7 +56,6 @@ class UnifiedModelLoader
     }
 
     /**
-     * @param Carbon $fromDate
      * @return CashflowEntry[]
      */
     public function loadInstallmentEntries(Carbon $fromDate): array
@@ -80,13 +78,13 @@ class UnifiedModelLoader
         $details = $record->details;
 
         $rule = match (strtolower($details['frequency'] ?? '')) {
-            'daily' => new DailyRule(),
-            'weekly' => new WeeklyRule(),
-            'monthly' => new MonthlyRule(),
-            'bimonthly' => new BimonthlyRule(),
-            'quarterly' => new QuarterlyRule(),
-            'semiannual' => new SemiannualRule(),
-            'yearly' => new YearlyRule(),
+            'daily' => new DailyRule,
+            'weekly' => new WeeklyRule,
+            'monthly' => new MonthlyRule,
+            'bimonthly' => new BimonthlyRule,
+            'quarterly' => new QuarterlyRule,
+            'semiannual' => new SemiannualRule,
+            'yearly' => new YearlyRule,
             default => throw new \InvalidArgumentException("Invalid frequency: {$details['frequency']}"),
         };
 
